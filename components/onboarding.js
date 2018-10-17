@@ -1,0 +1,38 @@
+const debug = require('debug')('botkit:onboarding');
+
+module.exports = controller => {
+  controller.on('onboard', bot => {
+    debug('Starting an onboarding experience!');
+
+    if (controller.config.studio_token) {
+      bot.api.im.open({
+        user: bot.config.createdBy
+      }, (err, directMessage) => {
+        if (err) {
+          debug('Error sending onboarding message:', err);
+        } else {
+          controller.studio.run(
+            bot,
+            'onboarding',
+            bot.config.createdBy,
+            directMessage.channel.id,
+            directMessage
+          ).catch(error => {
+            debug('Error: encountered an error loading onboarding script from Botkit Studio:', error);
+          });
+        }
+      });
+    } else {
+      bot.startPrivateConversation({
+        user: bot.config.createdBy
+      }, (err, convo) => {
+        if (err) {
+          console.log(err);
+        } else {
+          convo.say('I am a bot that has just joined your team');
+          convo.say('You must now /invite me to a channel so that I can be of use!');
+        }
+      });
+    }
+  });
+};

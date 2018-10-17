@@ -1,0 +1,27 @@
+{
+  "name": "Lunchly",
+  "description": "A simple Slack bot that announces your lunch for today.",
+  "repository": "https://github.com/howdyai/botkit-starter-slack",
+  "keywords": ["node", "bots", "slack", "lunch", "zerocrater"],
+  "website": "https://github.com/lunchly",
+  "success_url": "/",
+  "addons": [{
+    "plan": "mongolab",
+    "as": "MONGO"
+  }],
+  "env": {
+    "clientId": {
+      "description": "Client ID provided by Slack"
+    },
+    "clientSecret": {
+      "description": "Client Secret provided by Slack"
+    },
+    "studio_token": {
+      "description": "Token associated with your bot in Botkit Studio",
+      "required": false
+    },
+    "zerocrater_company_id": {
+      "description": "The Company ID for your ZeroCrater account"
+    }
+  }
+}

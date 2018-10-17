@@ -1,0 +1,53 @@
+{
+  "name": "@lunchly/slack-bot",
+  "description": "A Slack bot that announces meals for your company.",
+  "version": "0.0.2",
+  "engines": {
+    "node": ">=8"
+  },
+  "main": "bot.js",
+  "scripts": {
+    "dev": "DEBUG=* npm start",
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "@lunchly/service-zerocrater": "^0.1.0",
+    "axios": "^0.18.0",
+    "body-parser": "^1.15.2",
+    "botkit": "^0.6.15",
+    "botkit-storage-mongo": "^1.0.6",
+    "botkit-studio-metrics": "^0.0.2",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.14.0",
+    "express-hbs": "^1.0.4",
+    "node-env-file": "^0.1.8",
+    "request": "^2.79.0"
+  },
+  "devDependencies": {
+    "debug": "^2.6.9",
+    "supports-color": "^5.5.0",
+    "xo": "^0.23.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/howdyai/botkit-starter-slack.git"
+  },
+  "keywords": [
+    "bots",
+    "chatbots",
+    "slack"
+  ],
+  "author": {
+    "name": "Chris Vogt",
+    "email": "mail@chrisvogt.me",
+    "url": "https://www.chrisvogt.me"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/howdyai/botkit-starter-slack/issues"
+  },
+  "homepage": "https://github.com/howdyai/botkit-starter-slack",
+  "xo": {
+    "extends": ".eslintrc"
+  }
+}

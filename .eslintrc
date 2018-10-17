@@ -1,0 +1,8 @@
+{
+  "rules": {
+    "array-bracket-spacing": [1, "always"],
+    "camelcase": ["error", { "properties": "never" }],
+    "indent": ["error", 2],
+    "object-curly-spacing": [1, "always"]
+  }
+}
