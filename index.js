@@ -4,15 +4,13 @@ const {
   WebClient
 } = require('@slack/client');
 
-const {
-  ENDPOINTS
-} = require('./constants');
+const { ENDPOINTS } = require('./constants');
 const initialState = require('./initial-state');
 
 const getSubscribedChannels = require('./utils/get-subscribed-channels');
 const getSites = require('./utils/get-sites');
 
-const token = 'xoxb-453088871494-570685820692-NfTjRbpN9BgmQqce6kkxlqxU';
+const token = process.env.SLACK_BOT_API_TOKEN;
 
 const plugins = [
   require('./todays-lunch')

@@ -3,6 +3,7 @@
     "node": true,
     "es6": true
   },
+  "parser": "babel-eslint",
   "rules": {
     "array-bracket-spacing": [1, "always"],
     "camelcase": ["error", { "properties": "never" }],

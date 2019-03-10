@@ -31,10 +31,16 @@
     "@slack/client": "^4.11.0"
   },
   "devDependencies": {
+    "babel-eslint": "^10.0.1",
     "debug": "^4.1.1",
     "xo": "^0.24.0"
   },
   "xo": {
-    "extends": ".eslintrc"
+    "rules": {
+      "array-bracket-spacing": 0,
+      "camelcase": 0,
+      "object-curly-spacing": 0
+    },
+    "space": true
   }
 }

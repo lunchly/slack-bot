@@ -1,6 +1,4 @@
-const {
-  today
-} = require('@lunchly/service-zerocrater');
+const { today } = require('@lunchly/service-zerocrater');
 
 module.exports = clients => {
   const {
@@ -61,7 +59,6 @@ module.exports = clients => {
 
     const mealsURL = ZEROCRATER_MEALS_URL.replace('{companyId}', zeroCaterID);
     const mealURL = `${mealsURL}/${id}`;
-
     const messageTemplate = `Today's lunch is *${name}*, brought to you by *${vendorName}* — _${vendorDescription}_`;
 
     const res = await slack.chat.postMessage({
