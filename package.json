@@ -24,7 +24,7 @@
     "dev": "DEBUG=* npm start",
     "lint": "xo",
     "start": "node .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run lint"
   },
   "dependencies": {
     "@lunchly/service-zerocrater": "^0.1.0",
