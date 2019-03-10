@@ -22,10 +22,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "DEBUG=* npm start",
-    "lint": "xo",
+    "lint": "./node_modules/.bin/xo",
     "start": "node .",
     "test": "npm run lint && npm run unit",
-    "unit": "nyc ava"
+    "unit": "./node_modules/.bin/nyc ./node_modules/.bin/ava"
   },
   "dependencies": {
     "@lunchly/service-zerocrater": "^0.1.0",
