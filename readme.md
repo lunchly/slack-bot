@@ -1,4 +1,4 @@
-# Lunchly
+# Lunchly [![CircleCI](https://circleci.com/gh/lunchly/slack-bot/tree/master.svg?style=svg)](https://circleci.com/gh/lunchly/slack-bot/tree/master)
 
 > Slack bot that announces catered meals
 
@@ -8,7 +8,7 @@ Lunchly is a bot built on top of the [`botkit-starter-slack`](https://github.com
 ### Roadmap
 
 - [x] Integrate with ZeroCater
-- [ ] Support a unique meal provider per channel
+- [x] Support a unique meal provider per channel
 - [ ] Add support for scheduled announcements
 
 
