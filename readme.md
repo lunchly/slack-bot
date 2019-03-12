@@ -2,7 +2,7 @@
 
 > Slack bot that announces daily catered meals
 
-Lunchly is a Slack bot built to improve daily meal announcements for companies that have scheduled food catering. Right now it only supports ZeroCater because that is the service we use at work. Feel welcome to submit a pull request to add support for other catering services.
+Lunchly is a Slack bot that posts consistent, useful daily meal announcements for companies with scheduled food catering. It only supports ZeroCater because that is the catering service used at my office, but feel welcome to submit a pull request adding support for other catering services.
 
 
 ### Requirements
@@ -46,6 +46,12 @@ To run Lunchly, ensure the configuration steps above are completed, and do the f
 
 ```SLACK_BOT_API_TOKEN=xoxb-0000-your-token npm run start```
 
+
+### Use
+
+Lunchly listens for `!lunch` in all channels it is a member of. If a meal is found for that day then the bot will post a message containing details about the meal.
+
+![Lunchly screenshot, ZeroCater integration](https://lh3.googleusercontent.com/DkLYhUan8xUOZs6E9JaMy55TiDWjqopBHZOMsUXqMIPlipYxb79HutY64aEfsAUjNGPtxZOlKuVTIbgltkDD_LoCgkzgWWtOaeCVF_Qan8tbEytbTvaWOJ8g53JW85D4SFi4Oe5lEBiPY7dC71Z21jcAyAJlAcBv6cj4SzQHCIeM2YR8q42egTynPyMHXSYjDG1Z8fCKn50vVqBfrqYxFuQEM5SE7_6CH6KeMFg37ISStgeQSCuobxSJsnO2sHxGpeIp4_b0MvdZTZu3tMo5IS3lNLsZh35nDacKEpbDEM0UBGWFbiTRJmsywju0K9uQZD9bZX5crZ6RGCHkiv4JV6-M8laaDwXUfoxtocnKY5kNLNO5ZfuTcKlOBUycWEgjYKRRjrX_mhjOxQlZJa7FC8OdsbQ3jcItDr2tx7te_Q6OU5z_itOi0VP1Oj82WlNskW7saoaNYAcrIvBzlnKDyeF2E-bFzjGI5StHxXo1W7BsUuBkvA0KUIo7IQVWMf8RVq3FIkkzyKj-TeCZqvgjKzRFGY6B9vSSe82MI1zn1B2SOcjD4Wb5djHgzDSf9-ofa6sEunQ0ZE_tg_Otga__jop57WcjiBhH7rwPY6-7_vWydSCp2vNFTZ4hz9TneoMcYmOXZv0IZH76dZZhXIeCZpRykpjwb9Xu=w1310-h414-no)
 
 ## License
 
