@@ -36,6 +36,9 @@ jobs:
           paths:
             - node_modules
       - run:
+          name: Mock the sites configuration
+          command: cp sites.example.json sites.json
+      - run:
           name: Test
           command: npm test
       - run:
