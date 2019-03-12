@@ -1,37 +1,7 @@
 {
   "name": "@lunchly/slack-bot",
+  "version": "0.1.0",
   "description": "A Slack bot that announces meals for your company.",
-  "version": "0.0.2",
-  "engines": {
-    "node": ">=8"
-  },
-  "main": "bot.js",
-  "scripts": {
-    "dev": "DEBUG=* npm start",
-    "start": "node bot.js"
-  },
-  "dependencies": {
-    "@lunchly/service-zerocrater": "^0.1.0",
-    "axios": "^0.18.0",
-    "body-parser": "^1.15.2",
-    "botkit": "^0.6.15",
-    "botkit-storage-mongo": "^1.0.6",
-    "botkit-studio-metrics": "^0.0.2",
-    "cookie-parser": "^1.4.3",
-    "express": "^4.14.0",
-    "express-hbs": "^1.0.4",
-    "node-env-file": "^0.1.8",
-    "request": "^2.79.0"
-  },
-  "devDependencies": {
-    "debug": "^2.6.9",
-    "supports-color": "^5.5.0",
-    "xo": "^0.23.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/howdyai/botkit-starter-slack.git"
-  },
   "keywords": [
     "bots",
     "chatbots",
@@ -42,12 +12,38 @@
     "email": "mail@chrisvogt.me",
     "url": "https://www.chrisvogt.me"
   },
+  "repository": "github:lunchly/slack-bot",
+  "bugs": "https://github.com/lunchly/slack-bot/issues",
+  "homepage": "https://github.com/lunchly/slack-bot",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/howdyai/botkit-starter-slack/issues"
+  "engines": {
+    "node": ">=8"
   },
-  "homepage": "https://github.com/howdyai/botkit-starter-slack",
+  "main": "index.js",
+  "scripts": {
+    "dev": "DEBUG=* npm start",
+    "lint": "./node_modules/.bin/xo",
+    "start": "node .",
+    "test": "npm run lint && npm run unit",
+    "unit": "./node_modules/.bin/nyc ./node_modules/.bin/ava"
+  },
+  "dependencies": {
+    "@lunchly/service-zerocrater": "^0.1.0",
+    "@slack/client": "^4.11.0",
+    "ava": "^1.3.1",
+    "nyc": "^13.3.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "debug": "^4.1.1",
+    "xo": "^0.24.0"
+  },
   "xo": {
-    "extends": ".eslintrc"
+    "rules": {
+      "array-bracket-spacing": 0,
+      "camelcase": 0,
+      "object-curly-spacing": 0
+    },
+    "space": true
   }
 }

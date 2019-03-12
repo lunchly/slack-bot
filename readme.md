@@ -1,53 +1,50 @@
-# Lunchly
+# Lunchly [![CircleCI](https://circleci.com/gh/lunchly/slack-bot/tree/master.svg?style=svg)](https://circleci.com/gh/lunchly/slack-bot/tree/master)
 
-> Slack bot that announces catered meals
+> Slack bot that announces daily catered meals
 
-Lunchly is a bot built on top of the [`botkit-starter-slack`](https://github.com/howdyai/botkit-starter-slack) boilerplate. It responds to today's lunch with information about today's meal and a link to learn more about upcoming meals.
-
-
-### Roadmap
-
-- [x] Integrate with ZeroCater
-- [ ] Support a unique meal provider per channel
-- [ ] Add support for scheduled announcements
+Lunchly is a Slack bot built to improve daily meal announcements for companies that have scheduled food catering. Right now it only supports ZeroCater because that is the service we use at work. Feel welcome to submit a pull request to add support for other catering services.
 
 
-### Install Lunchly
+### Requirements
 
-Lunchly runs on Node.js 8+. To get started, clone this repository and install dependencies.
+Lunchly runs on Node 8+ and uses Slack's [Real Time Messaging API](https://api.slack.com/rtm) and [Web API](https://api.slack.com/web). ZeroCater integration is provided via the [@lunchly/service-zerocrater](https://github.com/lunchly/service-zerocater) plugin, which exposes a `today()` method to fetch today's meal.
+
+
+### Install
+
+To get started, clone this repository and install dependencies using `npm`.
 
 ```sh
+# Get the code
 git clone https://github.com/lunchly/slack-bot.git
-```
 
-Install dependencies, including [Botkit](https://github.com/howdyai/botkit):
-
-```sh
-cd slack-bot && npm install
+# Install dependencies
+npm install
 ```
 
 
-#### Set up your Slack Application
-Once you have setup your Botkit development enviroment, the next thing you will want to do is set up a new Slack application via the [Slack developer portal](https://api.slack.com/). This is a multi-step process, but only takes a few minutes.
+### Configure
 
-* [Read this step-by-step guide](https://botkit.ai/docs/provisioning/slack-events-api.html) to make sure everything is set up.
+Once you have complete the above steps your instance of Lunchly is ready to be configured. A list of channels to monitor and their associated ZeroCater account IDs is required. Your ZeroCater account ID can be found in the URL of your account's meal page.
 
-* Check out this [handy video walkthrough](https://youtu.be/us2zdf0vRz0) for setting up this project with Glitch.
+1. Copy `sites.example.json` to `sites.json` and replace with your values.
 
-Copy `.env.default` to `.env`.
-
-Update the `.env` file with your newly acquired tokens.
-
-Launch your bot application by typing:
-
-`npm run dev` (or `npm run start` in production)
-
-Now, visit your new bot's login page: http://localhost:3000/login
+2. If you don't already have one, [create a new bot user](https://api.slack.com/bot-users#creating-bot-user) for your Slack team. You'll need the [bot token](https://api.slack.com/docs/token-types#bot) (begins with `xoxb-`) to run Lunchly.
 
 
-# Developer & Support Community
+### Run
 
-You can find full documentation for Botkit on the [GitHub page](https://github.com/howdyai/botkit/blob/master/readme.md). Botkit Studio users can access the [Botkit Studio Knowledge Base](https://botkit.groovehq.com/help_center) for help in managing their account.
+To run Lunchly, ensure the configuration steps above are completed, and do the following:
+
+
+###### Development
+
+```SLACK_BOT_API_TOKEN=xoxb-0000-your-token npm run dev```
+
+
+###### Production
+
+```SLACK_BOT_API_TOKEN=xoxb-0000-your-token npm run start```
 
 
 ## License

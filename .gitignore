@@ -1,5 +1,5 @@
-.db
+.DS_Store
 .env
+.nyc_output
 node_modules
-components/routes/_*
-.sass-cache/*
+sites.json
