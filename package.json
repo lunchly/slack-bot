@@ -21,10 +21,13 @@
   },
   "main": "index.js",
   "scripts": {
+    "coverage": "./node_modules/.bin/nyc report --reporter=lcov",
     "dev": "DEBUG=* npm start",
     "lint": "./node_modules/.bin/xo",
+    "posttest": "npm run coverage",
+    "pretest": "npm run lint",
     "start": "node .",
-    "test": "npm run lint && npm run unit",
+    "test": "npm run unit",
     "unit": "./node_modules/.bin/nyc ./node_modules/.bin/ava"
   },
   "dependencies": {
