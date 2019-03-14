@@ -62,6 +62,7 @@ module.exports = clients => {
     const messageTemplate = `Today's lunch is *${name}*, brought to you by *${vendorName}* — _${vendorDescription}_`;
 
     const res = await slack.chat.postMessage({
+      as_user: true,
       channel: channelID,
       blocks: [
         {
