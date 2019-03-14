@@ -7,7 +7,7 @@ Lunchly is a Slack bot that posts consistent, useful daily meal announcements fo
 
 ### Requirements
 
-Lunchly runs on Node 8+ and uses Slack's [Real Time Messaging API](https://api.slack.com/rtm) and [Web API](https://api.slack.com/web). ZeroCater integration is provided via the [@lunchly/service-zerocrater](https://github.com/lunchly/service-zerocater) plugin, which exposes a `today()` method to fetch today's meal.
+Lunchly runs on Node 8+ and uses Slack's [Real Time Messaging API](https://api.slack.com/rtm) and [Web API](https://api.slack.com/web). ZeroCater integration is provided via the [@lunchly/service-zerocater](https://github.com/lunchly/service-zerocater) plugin, which exposes a `today()` method to fetch today's meal.
 
 
 ### Install

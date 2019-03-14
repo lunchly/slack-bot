@@ -1,10 +1,10 @@
-const { today } = require('@lunchly/service-zerocrater');
+const { today } = require('@lunchly/service-zerocater');
 
 module.exports = clients => {
   const {
     appState: {
       endpoints: {
-        ZEROCRATER_MEALS_URL
+        ZEROCATER_MEALS_URL
       },
       sites,
       subscribedChannels
@@ -57,7 +57,7 @@ module.exports = clients => {
       vendor_description: vendorDescription
     } = result;
 
-    const mealsURL = ZEROCRATER_MEALS_URL.replace('{companyId}', zeroCaterID);
+    const mealsURL = ZEROCATER_MEALS_URL.replace('{companyId}', zeroCaterID);
     const mealURL = `${mealsURL}/${id}`;
     const messageTemplate = `Today's lunch is *${name}*, brought to you by *${vendorName}* — _${vendorDescription}_`;
 
