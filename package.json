@@ -28,7 +28,7 @@
     "pretest": "npm run lint",
     "start": "node .",
     "test": "npm run unit",
-    "unit": "./node_modules/.bin/nyc ./node_modules/.bin/ava"
+    "unit": "SLACK_BOT_API_TOKEN=test ./node_modules/.bin/nyc ./node_modules/.bin/ava"
   },
   "dependencies": {
     "@lunchly/service-zerocrater": "^0.1.0",
@@ -39,6 +39,8 @@
   "devDependencies": {
     "babel-eslint": "^10.0.1",
     "debug": "^4.1.1",
+    "proxyquire": "^2.1.0",
+    "sinon": "^7.2.7",
     "xo": "^0.24.0"
   },
   "xo": {
