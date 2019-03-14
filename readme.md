@@ -1,4 +1,4 @@
-# Lunchly [![CircleCI](https://circleci.com/gh/lunchly/slack-bot/tree/master.svg?style=svg)](https://circleci.com/gh/lunchly/slack-bot/tree/master)
+# Lunchly [![CircleCI](https://circleci.com/gh/lunchly/slack-bot/tree/master.svg?style=svg)](https://circleci.com/gh/lunchly/slack-bot/tree/master) [![codecov](https://codecov.io/gh/lunchly/slack-bot/branch/master/graph/badge.svg)](https://codecov.io/gh/lunchly/slack-bot)
 
 > Slack bot that announces daily catered meals
 
