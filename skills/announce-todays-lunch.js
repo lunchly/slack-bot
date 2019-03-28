@@ -6,7 +6,7 @@ module.exports = ({
   webClient: slack
 }) => {
   if (!appState || !rtm || !slack) {
-    throw new TypeError('Missing DataSource arguments.');
+    throw new TypeError('Missing data required to load module.');
   }
 
   const {
@@ -18,7 +18,7 @@ module.exports = ({
   } = appState;
 
   if (!ZEROCATER_MEALS_URL || !sites || !subscribedChannels) {
-    throw new TypeError('Missing required app state.');
+    throw new TypeError('Missing data required to load app state.');
   }
 
   rtm.on('message', async message => {
