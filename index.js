@@ -7,23 +7,16 @@ const {
 const { ENDPOINTS } = require('./constants');
 const initialState = require('./initial-state');
 
-const getSubscribedChannels = require('./utils/get-subscribed-channels');
+const getAllSkills = require('./utils/get-all-skills');
 const getSites = require('./utils/get-sites');
+const getSubscribedChannels = require('./utils/get-subscribed-channels');
 
-const token = process.env.SLACK_BOT_API_TOKEN;
+const slackAPIToken = process.env.SLACK_BOT_API_TOKEN;
 
-const plugins = [
-  require('./todays-lunch')
-];
-
-const rtmClient = new RTMClient(token, {
-  logLevel: LogLevel.INFO
-});
-const webClient = new WebClient(token);
+const rtmClient = new RTMClient(slackAPIToken, { logLevel: LogLevel.INFO });
+const webClient = new WebClient(slackAPIToken);
 
 (async () => {
-  // NOTE: initiates a blocking request to fetch all of the public Slack
-  // channels and returns a dictionary keyed by the channel ID.
   const subscribedChannels = await getSubscribedChannels(webClient);
 
   const appState = {
@@ -33,17 +26,21 @@ const webClient = new WebClient(token);
     subscribedChannels
   };
 
-  await Promise.all(plugins.map(async plugin => {
-    if (typeof plugin === 'function') {
-      await plugin({
+  const skills = await getAllSkills({
+    basePath: __dirname
+  });
+
+  await Promise.all(skills.map(async skill => {
+    if (typeof skill === 'function') {
+      await skill({
         appState,
         rtmClient,
         webClient
       });
     }
 
-    if (typeof plugin.default === 'function') {
-      await plugin.default({
+    if (typeof skill.default === 'function') {
+      await skill.default({
         appState,
         rtmClient,
         webClient

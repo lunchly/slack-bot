@@ -1,12 +1,12 @@
 const allSites = require('../sites.json');
 
 const transformSites = (sites = {}, site) => {
-  const { admin, channel, zeroCaterID } = site;
+  const { admin, channel, company_id: companyId } = site;
 
   sites[channel] = {
     admin,
     channel,
-    zeroCaterID
+    companyId
   };
 
   return sites;
