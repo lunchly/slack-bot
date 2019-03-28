@@ -1,50 +1,51 @@
 const { today } = require('@lunchly/service-zerocater');
 
-module.exports = clients => {
+module.exports = ({
+  appState,
+  rtmClient: rtm,
+  webClient: slack
+}) => {
+  if (!appState || !rtm || !slack) {
+    throw new TypeError('Missing data required to load module.');
+  }
+
   const {
-    appState: {
-      endpoints: {
-        ZEROCATER_MEALS_URL
-      },
-      sites,
-      subscribedChannels
+    endpoints: {
+      ZEROCATER_MEALS_URL
     },
-    rtmClient: rtm,
-    webClient: slack
-  } = clients;
+    sites,
+    subscribedChannels
+  } = appState;
+
+  if (!ZEROCATER_MEALS_URL || !sites || !subscribedChannels) {
+    throw new TypeError('Missing data required to load app state.');
+  }
 
   rtm.on('message', async message => {
-    // NOTE: ignore own messages and those from other bots
-    if ((message.subtype && message.subtype === 'bot_message') ||
-      (!message.subtype && message.user === rtm.activeUserId)) {
-      return;
+    const isBotUser = message.subtype && message.subtype === 'bot_message';
+    const isOwnMessage = message.user === rtm.activeUserId;
+
+    // NOTE: ignore own and bot messages
+    if (!isBotUser && isOwnMessage) {
+      return null;
     }
 
-    // NOTE: ignore messages from channels without sites defined
     const {
       channel: channelID,
       text
     } = message;
-    if (!subscribedChannels[channelID]) {
-      return;
-    }
 
-    // NOTE: ignore messages that don't include '!lunch'
     const isInteraction = text.match(/!lunch/g);
-    if (!isInteraction) {
-      return;
+    if (!subscribedChannels[channelID] || !isInteraction) {
+      return null;
     }
 
-    const {
-      name: channelName
-    } = subscribedChannels[channelID];
-    const {
-      zeroCaterID
-    } = sites[channelName];
+    const { name: channelName } = subscribedChannels[channelID];
+    const { companyId } = sites[channelName];
 
     let result = {};
     try {
-      result = await today(zeroCaterID);
+      result = await today(companyId);
     } catch (error) {
       return console.error('No meal found for today.');
     }
@@ -57,11 +58,11 @@ module.exports = clients => {
       vendor_description: vendorDescription
     } = result;
 
-    const mealsURL = ZEROCATER_MEALS_URL.replace('{companyId}', zeroCaterID);
+    const mealsURL = ZEROCATER_MEALS_URL.replace('{companyId}', companyId);
     const mealURL = `${mealsURL}/${id}`;
     const messageTemplate = `Today's lunch is *${name}*, brought to you by *${vendorName}* — _${vendorDescription}_`;
 
-    const res = await slack.chat.postMessage({
+    const postMessageResult = await slack.chat.postMessage({
       as_user: true,
       channel: channelID,
       blocks: [
@@ -105,7 +106,6 @@ module.exports = clients => {
       ]
     });
 
-    // `res` contains information about the posted message
-    return console.log('Message sent:', res.ts);
+    return console.log('Message sent:', postMessageResult.ts);
   });
 };

@@ -2,10 +2,7 @@ import proxyquire from 'proxyquire';
 import sinon from 'sinon';
 import test from 'ava';
 
-import constants from './constants';
 import channelFixture from './_fixtures/channel.fixture';
-
-const { ENDPOINTS } = constants;
 
 const mockSites = [ { channel: 'sf', zeroCaterID: 'abc123' } ];
 const stubGetSites = sinon.stub().returns(mockSites);
@@ -62,16 +59,6 @@ test('it instantiates the Web client with the Slack API token', t => {
   t.deepEqual(stubWebClientConstructor.args, [
     [ 'test' ]
   ]);
-});
-
-test('loads each plugin with the expected app state', t => {
-  const expectedAppState = {
-    endpoints: ENDPOINTS,
-    sites: mockSites,
-    subscribedChannels: mockSubscribedChannels
-  };
-  const { appState } = stubTodaysLunch.args[0][0];
-  t.deepEqual(appState, expectedAppState);
 });
 
 test('it starts the RTM client', t => {
