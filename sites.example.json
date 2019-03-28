@@ -1,12 +1,10 @@
 [
   {
-    "admin": "ctaha",
     "channel": "sf",
-    "zeroCaterID": "4e4b72abbe7442e8bcafae962fbd1303"
+    "zeroCaterID": "00000000000000000000000000000000"
   },
   {
-    "admin": "jclure",
     "channel": "sunnyvale",
-    "zeroCaterID": "d61dbe2c05854defaf70862257109c8b"
+    "zeroCaterID": "00000000000000000000000000000000"
   }
 ]

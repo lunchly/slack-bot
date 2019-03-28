@@ -31,11 +31,11 @@
     "unit": "SLACK_BOT_API_TOKEN=test ./node_modules/.bin/nyc ./node_modules/.bin/ava"
   },
   "dependencies": {
-    "@lunchly/service-zerocater": "^0.2.0",
     "@slack/client": "^4.11.0",
     "globby": "^9.1.0"
   },
   "devDependencies": {
+    "@lunchly/service-zerocater": "^0.2.1",
     "ava": "^1.3.1",
     "babel-eslint": "^10.0.1",
     "debug": "^4.1.1",
