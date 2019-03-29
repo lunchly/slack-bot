@@ -1,5 +1,8 @@
 const { today } = require('@lunchly/service-zerocater');
 
+const logger = require('../logger');
+const tracker = require('../tracker');
+
 module.exports = ({
   appState,
   rtmClient: rtm,
@@ -43,11 +46,22 @@ module.exports = ({
     const { name: channelName } = subscribedChannels[channelID];
     const { companyId } = sites[channelName];
 
+    const trackingProps = {
+      channelName,
+      channelID,
+      companyId
+    };
+
     let result = {};
     try {
       result = await today(companyId);
+      tracker.track('Fetched today\'s meal', trackingProps);
     } catch (error) {
-      return console.error('No meal found for today.');
+      tracker.track('Unable to fetch today\'s meal', trackingProps);
+      return logger.error('No meal found for today.', {
+        channel: channelName,
+        companyId
+      });
     }
 
     const {
@@ -106,6 +120,15 @@ module.exports = ({
       ]
     });
 
-    return console.log('Message sent:', postMessageResult.ts);
+    tracker.track('Announced today\'s lunch', {
+      ...trackingProps,
+      timestamp: postMessageResult.ts
+    });
+
+    return logger.log('Today\'s lunch announced', {
+      channel: channelID,
+      companyId,
+      timestamp: postMessageResult.ts
+    });
   });
 };
