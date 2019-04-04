@@ -8,8 +8,6 @@ module.exports = async ({
 }) => {
   let result = {};
 
-  console.log(companyId);
-
   try {
     result = await today(companyId);
   } catch (error) {
