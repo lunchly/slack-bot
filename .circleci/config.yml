@@ -45,7 +45,7 @@ jobs:
           command: npm test
       - run:
           name: Generate code coverage
-          command: "./node_modules/.bin/nyc report --reporter=text-lcov"
+          command: "npm run coverage"
       - store_artifacts:
           path: coverage
           prefix: coverage
