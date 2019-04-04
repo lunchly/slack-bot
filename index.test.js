@@ -5,9 +5,10 @@ import test from 'ava';
 import channelFixture from './_fixtures/channel.fixture';
 
 const mockSites = [ { channel: 'sf', zeroCaterID: 'abc123' } ];
-const stubGetSites = sinon.stub().returns(mockSites);
 const mockSubscribedChannels = [ channelFixture ];
+const stubGetSites = sinon.stub().returns(mockSites);
 const stubGetSubscribedChannels = sinon.stub().resolves(mockSubscribedChannels);
+const stubGetAllListeners = sinon.stub().resolves([ () => {} ]);
 const stubRTMClientConstructor = sinon.stub();
 const stubStart = sinon.stub();
 const stubTodaysLunch = sinon.stub().resolves({});
@@ -41,8 +42,9 @@ const slackBot = proxyquire
     },
     './initial-state': {},
     './todays-lunch': stubTodaysLunch,
-    './utils/get-subscribed-channels': stubGetSubscribedChannels,
-    './utils/get-sites': stubGetSites
+    './utils/get-all-listeners': stubGetAllListeners,
+    './utils/get-sites': stubGetSites,
+    './utils/get-subscribed-channels': stubGetSubscribedChannels
   }).default;
 /* eslint-enable no-unused-vars */
 

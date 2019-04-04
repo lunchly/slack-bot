@@ -1,6 +1,6 @@
 const allSites = require('../sites.json');
 
-const transformSites = (sites = {}, site) => {
+const transformSites = (sites, site) => {
   const { channel, company_id: companyId } = site;
 
   sites[channel] = {
