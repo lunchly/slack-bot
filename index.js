@@ -7,7 +7,7 @@ const {
 const { ENDPOINTS } = require('./constants');
 const initialState = require('./initial-state');
 
-const getAllSkills = require('./utils/get-all-skills');
+const getAllListeners = require('./utils/get-all-listeners');
 const getSites = require('./utils/get-sites');
 const getSubscribedChannels = require('./utils/get-subscribed-channels');
 
@@ -26,27 +26,18 @@ const webClient = new WebClient(slackAPIToken);
     subscribedChannels
   };
 
-  const skills = await getAllSkills({
-    basePath: __dirname
-  });
-
-  await Promise.all(skills.map(async skill => {
-    if (typeof skill === 'function') {
-      await skill({
+  const listeners = await getAllListeners({ basePath: __dirname });
+  await Promise.all(listeners.map(async listener => {
+    try {
+      await listener({
         appState,
         rtmClient,
         webClient
       });
-    }
-
-    if (typeof skill.default === 'function') {
-      await skill.default({
-        appState,
-        rtmClient,
-        webClient
-      });
+    } catch (error) {
+      console.error('Error attaching listener', error);
     }
   }));
-})();
 
-rtmClient.start();
+  rtmClient.start();
+})();
