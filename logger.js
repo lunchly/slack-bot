@@ -2,7 +2,7 @@ const { createLogger, format, transports } = require('winston');
 
 const logger = createLogger({
   format: format.simple(),
-  level: 'debug',
+  level: 'info',
   transports: [
     new transports.File({ filename: 'lunchly-error.log', level: 'error' }),
     new transports.File({ filename: 'lunchly-combined.log' })

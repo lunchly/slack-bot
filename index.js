@@ -8,7 +8,7 @@ const { ENDPOINTS } = require('./constants');
 const initialState = require('./initial-state');
 const logger = require('./logger');
 
-const getAllSkills = require('./utils/get-all-skills');
+const getAllListeners = require('./utils/get-all-listeners');
 const getSites = require('./utils/get-sites');
 const getSubscribedChannels = require('./utils/get-subscribed-channels');
 
@@ -27,28 +27,22 @@ const webClient = new WebClient(slackAPIToken);
     subscribedChannels
   };
 
-  const skills = await getAllSkills({ basePath: __dirname });
-  await Promise.all(skills.map(async skill => {
-    try {
-      if (typeof skill === 'function') {
-        return await skill({
-          appState,
-          rtmClient,
-          webClient
-        });
-      }
 
-      if (typeof skill.default === 'function') {
-        return await skill.default({
-          appState,
-          rtmClient,
-          webClient
-        });
-      }
+  // NOTE: a listener should RETURN a result contract, but can throw
+  // its own errors. A result contract should include a status (SUCCESS, FAILURE)
+  // and any additional data relevant to the status.
+  const listeners = await getAllListeners({ basePath: __dirname });
+  await Promise.all(listeners.map(async listener => {
+    try {
+      await listener({
+        appState,
+        rtmClient,
+        webClient
+      });
     } catch (error) {
-      logger.error('Error loading skill', error);
+      logger.error('Unable to initialize listener.', error);
     }
   }));
-})();
 
-rtmClient.start();
+  rtmClient.start();
+})();

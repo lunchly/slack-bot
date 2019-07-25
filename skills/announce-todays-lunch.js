@@ -1,66 +1,48 @@
 const { today } = require('@lunchly/service-zerocater');
-
 const logger = require('../logger');
-const tracker = require('../tracker');
 
-module.exports = ({
-  appState,
-  rtmClient: rtm,
-  webClient: slack
-}) => {
-  if (!appState || !rtm || !slack) {
-    throw new TypeError('Missing data required to load module.');
-  }
+/**
+ * Sets a Date object to midnight.
+ * @param {Date} date The Date object to update.
+ * @returns {Date}
+ */
+const setDateToMidnight = date => {
+  return date.setHours(0, 0, 0, 0);
+};
 
+const isToday = date => {
+  const now = new Date();
+  return setDateToMidnight(date) === setDateToMidnight(now);
+};
+
+let todaysLunch = {};
+
+const announceTodaysLunch = async props => {
   const {
-    endpoints: {
-      ZEROCATER_MEALS_URL
-    },
-    sites,
-    subscribedChannels
-  } = appState;
+    channelId,
+    companyId,
+    mealURLTemplate,
+    webClient
+  } = props;
 
-  if (!ZEROCATER_MEALS_URL || !sites || !subscribedChannels) {
-    throw new TypeError('Missing data required to load app state.');
-  }
+  try {
+    if (!todaysLunch.meal || (todaysLunch.timestamp && !isToday(todaysLunch.timestamp))) {
+      const meal = await today(companyId);
 
-  rtm.on('message', async message => {
-    const isBotUser = message.subtype && message.subtype === 'bot_message';
-    const isOwnMessage = message.user === rtm.activeUserId;
+      if (!meal) {
+        throw new Error('No meal found for today.');
+      }
 
-    // NOTE: ignore own and bot messages
-    if (!isBotUser && isOwnMessage) {
-      return null;
-    }
+      const timestamp = new Date();
+      todaysLunch = meal && {
+        meal,
+        timestamp
+      };
 
-    const {
-      channel: channelID,
-      text
-    } = message;
-
-    const isInteraction = text.match(/!lunch/g);
-    if (!subscribedChannels[channelID] || !isInteraction) {
-      return null;
-    }
-
-    const { name: channelName } = subscribedChannels[channelID];
-    const { companyId } = sites[channelName];
-
-    const trackingProps = {
-      channelName,
-      channelID,
-      companyId
-    };
-
-    let result = {};
-    try {
-      result = await today(companyId);
-      tracker.track('Fetched today\'s meal', trackingProps);
-    } catch (error) {
-      tracker.track('Unable to fetch today\'s meal', trackingProps);
-      return logger.error('No meal found for today.', {
-        channel: channelName,
-        companyId
+      logger.debug('Meal data fetched.', {
+        companyId,
+        skill: 'ANNOUNCE_TODAYS_LUNCH',
+        timestamp
       });
     }
 
@@ -70,21 +52,28 @@ module.exports = ({
       vendor_name: vendorName,
       vendor_image_url: vendorImageURL,
       vendor_description: vendorDescription
-    } = result;
+    } = todaysLunch.meal;
 
-    const mealsURL = ZEROCATER_MEALS_URL.replace('{companyId}', companyId);
-    const mealURL = `${mealsURL}/${id}`;
-    const messageTemplate = `Today's lunch is *${name}*, brought to you by *${vendorName}* — _${vendorDescription}_`;
+    const mealURL = mealURLTemplate.replace('{companyId}', companyId);
+    const mealsHyperlinkURL = `${mealURL}/${id}`;
+    const message = `Today's lunch is *${name}*, brought to you by *${vendorName}* — _${vendorDescription}_`;
 
-    const postMessageResult = await slack.chat.postMessage({
+    logger.debug('Message data generated.', {
+      companyId,
+      mealURL,
+      mealsHyperlinkURL,
+      message
+    });
+
+    const postMessageResult = await webClient.chat.postMessage({
       as_user: true,
-      channel: channelID,
+      channel: channelId,
       blocks: [
         {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: messageTemplate
+            text: message
           },
           accessory: {
             type: 'image',
@@ -112,7 +101,7 @@ module.exports = ({
                 emoji: true,
                 text: 'Upcoming meals'
               },
-              url: mealsURL,
+              url: mealsHyperlinkURL,
               value: 'upcoming_meals'
             }
           ]
@@ -120,15 +109,16 @@ module.exports = ({
       ]
     });
 
-    tracker.track('Announced today\'s lunch', {
-      ...trackingProps,
-      timestamp: postMessageResult.ts
-    });
-
-    return logger.log('Today\'s lunch announced', {
-      channel: channelID,
-      companyId,
-      timestamp: postMessageResult.ts
-    });
-  });
+    return {
+      result: 'success',
+      data: { ...postMessageResult }
+    };
+  } catch (error) {
+    return {
+      result: 'failure',
+      error
+    };
+  }
 };
+
+module.exports = announceTodaysLunch;

@@ -17,7 +17,7 @@
   "homepage": "https://github.com/lunchly/slack-bot",
   "license": "MIT",
   "engines": {
-    "node": ">=8"
+    "node": ">=8.3"
   },
   "main": "index.js",
   "scripts": {
@@ -28,7 +28,7 @@
     "pretest": "npm run lint",
     "start": "node .",
     "test": "npm run unit",
-    "unit": "SLACK_BOT_API_TOKEN=test ./node_modules/.bin/nyc ./node_modules/.bin/ava"
+    "unit": "SLACK_BOT_API_TOKEN=test ./node_modules/.bin/nyc --all ./node_modules/.bin/ava"
   },
   "dependencies": {
     "@slack/client": "^4.11.0",
