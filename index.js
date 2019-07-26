@@ -27,22 +27,29 @@ const webClient = new WebClient(slackAPIToken);
     subscribedChannels
   };
 
-
   // NOTE: a listener should RETURN a result contract, but can throw
   // its own errors. A result contract should include a status (SUCCESS, FAILURE)
   // and any additional data relevant to the status.
   const listeners = await getAllListeners({ basePath: __dirname });
-  await Promise.all(listeners.map(async listener => {
+  const log = await Promise.all(listeners.map(async listener => {
+    const attachedListeners = [];
+
     try {
-      await listener({
+      const result = await listener({
         appState,
         rtmClient,
         webClient
       });
+
+      attachedListeners.push(result);
+
+      return attachedListeners;
     } catch (error) {
-      logger.error('Unable to initialize listener.', error);
+      logger.error('An error occured initializing listener.', error);
     }
   }));
+
+  logger.debug('Done attaching listeners', log);
 
   rtmClient.start();
 })();

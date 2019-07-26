@@ -1,11 +1,11 @@
 const { createLogger, format, transports } = require('winston');
+const isProductionEnv = require('./validators/env/is-production');
 
 const logger = createLogger({
   format: format.simple(),
-  level: 'info',
+  level: (!isProductionEnv() && process.env.LOG_LEVEL) || 'info',
   transports: [
-    new transports.File({ filename: 'lunchly-error.log', level: 'error' }),
-    new transports.File({ filename: 'lunchly-combined.log' })
+    new transports.File({ filename: 'lunchly-error.log', level: 'error' })
   ]
 });
 
