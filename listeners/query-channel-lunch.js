@@ -25,8 +25,6 @@ module.exports = ({
     throw new TypeError('Required items not found in app state.');
   }
 
-  logger.info(`Listener attached: ${LISTENER}`);
-
   rtm.on('message', async message => {
     const isBotUser = message.subtype && message.subtype === 'bot_message';
     const isOwnMessage = message.user === rtm.activeUserId;
@@ -54,20 +52,21 @@ module.exports = ({
     const { name: channelName } = subscribedChannels[channelId];
     const { companyId } = sites[channelName];
 
-    const loggableProps = {
+    const result = await announceTodaysLunch({
       channelId,
       channelName,
       companyId,
-      mealURLTemplate
-    };
-
-    const result = await announceTodaysLunch({
-      ...loggableProps,
+      mealURLTemplate,
       webClient
     });
 
-    logger.debug('QUERY_CHANNEL_LUNCH',
+    logger.debug('Responded to query: QUERY_CHANNEL_LUNCH', {
+      request: {
+        channelId,
+        channelName,
+        companyId
+      },
       result
-    );
+    });
   });
 };
