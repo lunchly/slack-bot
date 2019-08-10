@@ -27,15 +27,19 @@ const announceMeal = async ({
 
     try {
       meal = await today(companyId);
-      logger.debug(`Found a meal for today.`, meal);
+      logger.debug('Fetched and found meal for today\'s meal..', meal);
     } catch (error) {
-      logger.debug('Failed to find a meal for today', {
+      logger.debug('Failed to find a meal for today.', {
         error
       });
     }
 
     if (!meal) {
-      throw new Error('No meal found for today.');
+      return {
+        action: 'ANNOUNCE_MEAL',
+        result: 'failure',
+        message: 'No meal found for today.'
+      };
     }
 
     const timestamp = new Date();
