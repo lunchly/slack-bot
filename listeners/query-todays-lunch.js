@@ -12,28 +12,23 @@ module.exports = ({
       text
     } = message;
 
-    console.log('checking using text...', text);
-
     const isNotBotUser = Boolean(message.subtype !== 'bot_message');
     const isNotOwnMessage = message.user !== rtm.activeUserId;
 
-    const checks = [
+    const isTrue = result => result === true;
+    const isInteraction = [
       /!lunch/ig.test(text),
       /what.{1}s for lunch/ig.test(text),
       /what is for lunch/ig.test(text),
       /what is today.{1}s lunch/ig.test(text),
       /what.{1}s for lunch/ig.test(text)
-    ];
+    ].some(isTrue);
 
-    const isTrue = result => result === true;
-    const isInteraction = checks.some(isTrue);
-
-    const shouldRespondChecks = [
+    const shouldRespond = [
       isNotBotUser,
       isNotOwnMessage,
       isInteraction
-    ];
-    const shouldRespond = shouldRespondChecks.every(isTrue);
+    ].every(isTrue);
 
     if (!shouldRespond) {
       return null;
