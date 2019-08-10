@@ -46,6 +46,6 @@ const webClient = new WebClient(slackAPIToken);
   }));
 
   logger.info(`Attached ${skillsRegistry.length} skills.`);
-
-  rtmClient.start();
 })();
+
+rtmClient.start();
