@@ -36,16 +36,13 @@ const webClient = new WebClient(slackAPIToken);
   await Promise.all(skills.map(async skill => {
     try {
       const loadedSkill = await skill(appState);
-
-      skillsRegistry.push(loadedSkill);
-
-      return skillsRegistry;
+      skillsRegistry[loadedSkill.id] = loadedSkill;
     } catch (error) {
-      logger.error('An error occured initializing listener.', error);
+      logger.error('An error occured attaching a skill.', error);
     }
   }));
 
-  logger.info(`Attached ${skillsRegistry.length} skills.`);
+  logger.debug('Finished loading skills.', skillsRegistry);
 })();
 
 rtmClient.start();

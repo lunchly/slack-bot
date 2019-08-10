@@ -37,6 +37,4 @@ module.exports = ({
     const result = await action({ appState, message });
     logger.debug('QUERY_CHANNEL_LUNCH completed an action.', result);
   });
-
-  return 'Listener QUERY_TODAYS_LUNCH attached successfully.';
 };

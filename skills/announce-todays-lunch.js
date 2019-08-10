@@ -3,18 +3,19 @@ const lunchQueryListener = require('../listeners/query-todays-lunch');
 
 const skill = appState => {
   try {
-    const listenerAttachmentResult = lunchQueryListener({
+    lunchQueryListener({
       action: announceMeal,
       appState
     });
 
     return {
-      result: 'success',
-      data: { ...listenerAttachmentResult }
+      status: 'loaded',
+      id: 'ANNOUNCE_TODAYS_LUNCH'
     };
   } catch (error) {
     return {
-      result: 'failure',
+      status: 'failed',
+      id: 'ANNOUNCE_TODAYS_LUNCH',
       error
     };
   }
