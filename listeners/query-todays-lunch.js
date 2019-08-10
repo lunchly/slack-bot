@@ -2,58 +2,41 @@ const logger = require('../logger');
 const tracker = require('../tracker');
 
 module.exports = ({
-  appState,
-  clients: {
-    rtm,
-    web
-  },
-  config: {
-    ZEROCATER_MEALS_URL: mealURLTemplate
-  },
-  subscribedChannels
+  action,
+  appState
 }) => {
+  const {
+    clients: { rtm },
+    subscribedChannels
+  } = appState;
+
   rtm.on('message', async message => {
-    const isBotUser = message.subtype && message.subtype === 'bot_message';
+    const {
+      channel,
+      text
+    } = message;
+
+    const isBotUser = Boolean(message.subtype && message.subtype === 'bot_message');
     const isOwnMessage = message.user === rtm.activeUserId;
 
     if (!isBotUser && isOwnMessage) {
       return null;
     }
 
-    const {
-      channel: channelId,
-      text
-    } = message;
-
     const isInteraction = text.match(/!lunch/g);
-    if (!subscribedChannels[channelId] || !isInteraction) {
+    if (!subscribedChannels[channel] || !isInteraction) {
       return null;
     }
 
     tracker.track('New interaction detected.', {
-      channelId,
+      channel,
       listener: 'QUERY_CHANNEL_LUNCH',
       text
     });
 
-    const { name: channelName } = subscribedChannels[channelId];
-    const { companyId } = sites[channelName];
-
-    const result = await announceTodaysLunch({
-      channelId,
-      channelName,
-      companyId,
-      mealURLTemplate,
-      web
-    });
-
-    logger.debug('Responded to query: QUERY_CHANNEL_LUNCH', {
-      request: {
-        channelId,
-        channelName,
-        companyId
-      },
-      result
-    });
+    const result = await action({ appState, message });
+    logger.debug('QUERY_CHANNEL_LUNCH completed an action.', result);
   });
+
+  return 'Listener QUERY_TODAYS_LUNCH attached successfully.';
 };

@@ -1,13 +1,57 @@
+const { today } = require('@lunchly/service-zerocater');
 const buildSlackResponse = require('../utils/build-slack-response');
+const isToday = require('../utils/is-today');
+const logger = require('../logger');
 
-const announceMeal = async (meal, channelId, companyId, webClient) => {
+let todaysLunch = {};
+
+const announceMeal = async ({
+  appState: {
+    clients: { web },
+    endpoints,
+    sites,
+    subscribedChannels
+  },
+  message: { channel: channelId }
+}) => {
+  logger.debug('Action ANNOUNCE_MEAL called.');
+
+  const { ZEROCATER_MEALS_URL: mealURLTemplate } = endpoints;
+  const { name: channelName } = subscribedChannels[channelId];
+  const { companyId } = sites[channelName];
+
+  if (!todaysLunch.meal || (!todaysLunch.timestamp && !isToday(todaysLunch.timestamp))) {
+    logger.debug('No existing or expired meal data found. Attempting to fetch a new meal.');
+
+    let meal;
+
+    try {
+      meal = await today(companyId);
+      logger.debug(`Found a meal for today.`, meal);
+    } catch (error) {
+      logger.debug('Failed to find a meal for today', {
+        error
+      });
+    }
+
+    if (!meal) {
+      throw new Error('No meal found for today.');
+    }
+
+    const timestamp = new Date();
+    todaysLunch = meal && {
+      meal,
+      timestamp
+    };
+  }
+
   const {
     id,
     name,
     vendor_description: vendorDescription,
     vendor_image_url: vendorImageURL,
     vendor_name: vendorName
-  } = meal;
+  } = todaysLunch.meal;
 
   const mealURL = mealURLTemplate.replace('{companyId}', companyId);
   const mealsHyperlinkURL = `${mealURL}/${id}`;
@@ -22,7 +66,7 @@ const announceMeal = async (meal, channelId, companyId, webClient) => {
     vendorName
   });
 
-  const result = await webClient.chat.postMessage(response);
+  const result = await web.chat.postMessage(response);
   return result;
 };
 

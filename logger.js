@@ -1,9 +1,10 @@
 const { createLogger, format, transports } = require('winston');
 const isProductionEnv = require('./validators/env/is-production');
 
+const logLevel = !isProductionEnv() && process.env.LOG_LEVEL ? process.env.LOG_LEVEL : 'info';
 const logger = createLogger({
   format: format.simple(),
-  level: (!isProductionEnv() && process.env.LOG_LEVEL) || 'info',
+  level: logLevel,
   transports: [
     new transports.File({ filename: 'lunchly-error.log', level: 'error' })
   ]

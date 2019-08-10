@@ -24,6 +24,10 @@ const webClient = new WebClient(slackAPIToken);
 
   const appState = {
     ...initialState,
+    clients: {
+      rtm: rtmClient,
+      web: webClient
+    },
     endpoints: ENDPOINTS,
     sites: getSites(),
     subscribedChannels
@@ -31,14 +35,7 @@ const webClient = new WebClient(slackAPIToken);
 
   await Promise.all(skills.map(async skill => {
     try {
-      const loadedSkill = await skill({
-        appState,
-        clients: {
-          rtm: rtmClient,
-          web: webClient
-        },
-        config: {} // TODO: connect this
-      });
+      const loadedSkill = await skill(appState);
 
       skillsRegistry.push(loadedSkill);
 
