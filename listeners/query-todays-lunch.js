@@ -5,26 +5,32 @@ module.exports = ({
   action,
   appState
 }) => {
-  const {
-    clients: { rtm },
-    subscribedChannels
-  } = appState;
-
+  const { clients: { rtm } } = appState;
   rtm.on('message', async message => {
     const {
       channel,
       text
     } = message;
 
-    const isBotUser = Boolean(message.subtype && message.subtype === 'bot_message');
-    const isOwnMessage = message.user === rtm.activeUserId;
+    const isNotBotUser = Boolean(message.subtype !== 'bot_message');
+    const isNotOwnMessage = message.user !== rtm.activeUserId;
 
-    if (!isBotUser && isOwnMessage) {
-      return null;
-    }
+    const isTrue = result => result === true;
+    const isInteraction = [
+      /!lunch/ig.test(text),
+      /what.{1}s for lunch/ig.test(text),
+      /what is for lunch/ig.test(text),
+      /what is today.{1}s lunch/ig.test(text),
+      /what.{1}s for lunch/ig.test(text)
+    ].some(isTrue);
 
-    const isInteraction = text.match(/!lunch/g);
-    if (!subscribedChannels[channel] || !isInteraction) {
+    const shouldRespond = [
+      isNotBotUser,
+      isNotOwnMessage,
+      isInteraction
+    ].every(isTrue);
+
+    if (!shouldRespond) {
       return null;
     }
 
