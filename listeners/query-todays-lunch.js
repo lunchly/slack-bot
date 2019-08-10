@@ -1,30 +1,17 @@
-const announceTodaysLunch = require('../skills/announce-todays-lunch');
 const logger = require('../logger');
 const tracker = require('../tracker');
 
-const LISTENER = 'QUERY_CHANNEL_LUNCH';
-
 module.exports = ({
   appState,
-  rtmClient: rtm,
-  webClient
+  clients: {
+    rtm,
+    web
+  },
+  config: {
+    ZEROCATER_MEALS_URL: mealURLTemplate
+  },
+  subscribedChannels
 }) => {
-  if (!appState || !rtm || !webClient) {
-    throw new TypeError('Missing data required to load module.');
-  }
-
-  const {
-    endpoints: {
-      ZEROCATER_MEALS_URL: mealURLTemplate
-    },
-    sites,
-    subscribedChannels
-  } = appState;
-
-  if (!mealURLTemplate || !sites || !subscribedChannels) {
-    throw new TypeError('Required items not found in app state.');
-  }
-
   rtm.on('message', async message => {
     const isBotUser = message.subtype && message.subtype === 'bot_message';
     const isOwnMessage = message.user === rtm.activeUserId;
@@ -45,7 +32,7 @@ module.exports = ({
 
     tracker.track('New interaction detected.', {
       channelId,
-      listener: LISTENER,
+      listener: 'QUERY_CHANNEL_LUNCH',
       text
     });
 
@@ -57,7 +44,7 @@ module.exports = ({
       channelName,
       companyId,
       mealURLTemplate,
-      webClient
+      web
     });
 
     logger.debug('Responded to query: QUERY_CHANNEL_LUNCH', {

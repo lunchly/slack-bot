@@ -1,39 +1,34 @@
 const { today } = require('@lunchly/service-zerocater');
 
-const buildSlackResponse = require('../utils/build-slack-response');
-
-/**
- * Sets a Date object to midnight.
- * @param {Date} date The Date object to update.
- * @returns {Date} The updated Date object.
- */
-const setDateToMidnight = date => {
-  return date.setHours(0, 0, 0, 0);
-};
-
-/**
- * Validate that a date object is set to today.
- * @param {Date} date The date to check.
- * @returns {Boolean} The result of the check.
- */
-const isToday = date => {
-  const now = new Date();
-  return setDateToMidnight(date) === setDateToMidnight(now);
-};
+// const announceMeal = require('../actions/announce-meal');
+const isToday = require('../utils/is-today');
+const queryTodaysLunch = require('../listeners/query-todays-lunch');
 
 let todaysLunch = {};
 
-const announceTodaysLunch = async props => {
+const skill = async ({
+  appState,
+  clients: { rtm, web },
+  config: {
+    ZEROCATER_MEALS_URL: mealURLTemplate
+  }
+}) => {
+  if (!appState || !rtm || !web) {
+    throw new TypeError('Missing data required to load module.');
+  }
+
   const {
-    channelId,
-    companyId,
-    mealURLTemplate,
-    webClient
-  } = props;
+    sites,
+    subscribedChannels
+  } = appState;
+
+  if (!mealURLTemplate || !sites || !subscribedChannels) {
+    throw new TypeError('Required items not found in app state.');
+  }
 
   let meal;
 
-  if (!todaysLunch.meal || (todaysLunch.timestamp && !isToday(todaysLunch.timestamp))) {
+  if (!todaysLunch.meal || (!todaysLunch.timestamp && !isToday(todaysLunch.timestamp))) {
     try {
       meal = await today(companyId);
     } catch (error) {
@@ -55,32 +50,12 @@ const announceTodaysLunch = async props => {
   }
 
   try {
-    const {
-      id,
-      name,
-      vendor_description: vendorDescription,
-      vendor_image_url: vendorImageURL,
-      vendor_name: vendorName
-    } = todaysLunch.meal;
-
-    const mealURL = mealURLTemplate.replace('{companyId}', companyId);
-    const mealsHyperlinkURL = `${mealURL}/${id}`;
-    const text = `Today's lunch is *${name}*, brought to you by *${vendorName}* — _${vendorDescription}_`;
-
-    const response = buildSlackResponse({
-      channelId,
-      mealURL,
-      mealsHyperlinkURL,
-      text,
-      vendorImageURL,
-      vendorName
-    });
-
-    const postMessageResult = await webClient.chat.postMessage(response);
+    // NOTE(cvogt): load `today's lunch` listener
+    const result = queryTodaysLunch(todaysLunch.meal);
 
     return {
       result: 'success',
-      data: { ...postMessageResult }
+      data: { ...result }
     };
   } catch (error) {
     return {
@@ -88,6 +63,7 @@ const announceTodaysLunch = async props => {
       error
     };
   }
+
 };
 
-module.exports = announceTodaysLunch;
+module.exports = skill;

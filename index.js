@@ -8,16 +8,18 @@ const { ENDPOINTS } = require('./constants');
 const initialState = require('./initial-state');
 const logger = require('./logger');
 
-const getAllListeners = require('./utils/get-all-listeners');
+const getAllSkills = require('./utils/get-all-skills');
 const getSites = require('./utils/get-sites');
 const getSubscribedChannels = require('./utils/get-subscribed-channels');
 
+const skillsRegistry = [];
 const slackAPIToken = process.env.SLACK_BOT_API_TOKEN;
 
 const rtmClient = new RTMClient(slackAPIToken, { logLevel: LogLevel.INFO });
 const webClient = new WebClient(slackAPIToken);
 
 (async () => {
+  const skills = await getAllSkills({ basePath: __dirname });
   const subscribedChannels = await getSubscribedChannels(webClient);
 
   const appState = {
@@ -27,26 +29,26 @@ const webClient = new WebClient(slackAPIToken);
     subscribedChannels
   };
 
-  const listeners = await getAllListeners({ basePath: __dirname });
-  const log = await Promise.all(listeners.map(async listener => {
-    const attachedListeners = [];
-
+  await Promise.all(skills.map(async skill => {
     try {
-      const result = await listener({
+      const loadedSkill = await skill({
         appState,
-        rtmClient,
-        webClient
+        clients: {
+          rtm: rtmClient,
+          web: webClient
+        },
+        config: {} // TODO: connect this
       });
 
-      attachedListeners.push(result);
+      skillsRegistry.push(loadedSkill);
 
-      return attachedListeners;
+      return skillsRegistry;
     } catch (error) {
       logger.error('An error occured initializing listener.', error);
     }
   }));
 
-  logger.debug('Attached listeners.', log);
+  logger.info(`Attached ${skillsRegistry.length} skills.`);
 
   rtmClient.start();
 })();
