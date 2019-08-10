@@ -1,6 +1,6 @@
 {
   "name": "@lunchly/slack-bot",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A Slack bot that announces meals for your company.",
   "keywords": [
     "bots",
@@ -17,7 +17,7 @@
   "homepage": "https://github.com/lunchly/slack-bot",
   "license": "MIT",
   "engines": {
-    "node": ">=8"
+    "node": ">=8.3"
   },
   "main": "index.js",
   "scripts": {
@@ -32,7 +32,9 @@
   },
   "dependencies": {
     "@slack/client": "^4.11.0",
-    "globby": "^9.1.0"
+    "globby": "^9.1.0",
+    "mixpanel": "^0.10.2",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "@lunchly/service-zerocater": "^0.2.1",
