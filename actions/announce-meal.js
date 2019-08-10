@@ -21,13 +21,13 @@ const announceMeal = async ({
   const { companyId } = sites[channelName];
 
   if (!todaysLunch.meal || (!todaysLunch.timestamp && !isToday(todaysLunch.timestamp))) {
-    logger.debug('No existing or expired meal data found. Attempting to fetch a new meal.');
+    logger.debug('Meal data missing or stale. Fetching new meal data.');
 
     let meal;
 
     try {
       meal = await today(companyId);
-      logger.debug('Fetched and found meal for today\'s meal..', meal);
+      logger.debug('Fetched and found meal for today.', meal);
     } catch (error) {
       logger.debug('Failed to find a meal for today.', {
         error
