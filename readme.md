@@ -2,12 +2,12 @@
 
 > Slack bot that announces daily catered meals
 
-Lunchly is a Slack bot that posts consistent, useful daily meal announcements for companies with scheduled food catering. It only supports ZeroCater because that is the catering service used at my office, but feel welcome to submit a pull request adding support for other catering services.
+Lunchly is a Slack bot that posts daily meal announcements for companies with scheduled meal catering. Using Skills, Listeners, and Actions, Lunchly can be extended to support different vendors and interactions. It comes with built-in ZeroCater support.
 
 
-### Requirements
+#### Requirements
 
-Lunchly runs on Node 8+ and uses Slack's [Real Time Messaging API](https://api.slack.com/rtm) and [Web API](https://api.slack.com/web). ZeroCater integration is provided via the [@lunchly/service-zerocater](https://github.com/lunchly/service-zerocater) plugin, which exposes a `today()` method to fetch today's meal.
+Lunchly runs on Node 8.3+ and uses Slack's [Real Time Messaging API](https://api.slack.com/rtm) and [Web API](https://api.slack.com/web) clients. ZeroCater integration is provided via the [@lunchly/service-zerocater](https://github.com/lunchly/service-zerocater) plugin.
 
 
 ### Install
@@ -23,9 +23,11 @@ npm install
 ```
 
 
-### Configure
+### Configuration
 
-Once you have complete the above steps your instance of Lunchly is ready to be configured. A list of channels to monitor and their associated ZeroCater account IDs is required. Your ZeroCater account ID can be found in the URL of your account's meal page.
+Lunchly configuration is kept inside of a _/sites.json_ file in the project room. This file defines a list of channels to monitor and their associated ZeroCater account IDs.
+
+> Your ZeroCater account ID can be found in the URL of your account's meal page.
 
 1. Copy `sites.example.json` to `sites.json` and replace with your values.
 
@@ -49,7 +51,11 @@ To run Lunchly, ensure the configuration steps above are completed, and do the f
 
 ### Use
 
-Lunchly listens for `!lunch` in all channels it is a member of. If a meal is found for that day then the bot will post a message containing details about the meal.
+Lunchly listens for interactions in all channels it is a member of. If a meal is found for that day then the bot will post a message containing details about the meal.
+
+Triggers*: `!lunch`, `what's for lunch`, `what is for lunch`, `what is today's lunch`, `what's for lunch`
+
+_Apostrophe optional. Case insensitive._
 
 ![Lunchly screenshot, ZeroCater integration](screenshot.png)
 
