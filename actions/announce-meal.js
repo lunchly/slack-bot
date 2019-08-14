@@ -14,7 +14,7 @@ const announceMeal = async ({
   },
   message: { channel: channelId }
 }) => {
-  logger.debug(`Action ANNOUNCE_MEAL called in channel ${channelId}. Current todays lunch is`, todaysLunch);
+  logger.debug(`Action ANNOUNCE_MEAL called in channel ${channelId}.`);
 
   const { ZEROCATER_MEALS_URL: mealURLTemplate } = endpoints;
   const { name: channelName } = subscribedChannels[channelId];
@@ -27,9 +27,7 @@ const announceMeal = async ({
   });
 
   if (!todaysLunch[channelId].meal || !todaysLunch[channelId].timestamp || !isToday(todaysLunch[channelId].timestamp)) {
-    logger.debug('Meal data missing or stale. Fetching new meal data. Previous state logged.', {
-      todaysLunch
-    });
+    logger.debug('Missing or stale meal data. Fetching new meal data.');
 
     let meal;
 

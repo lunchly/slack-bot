@@ -8,8 +8,11 @@ module.exports = ({
   const { clients: { rtm } } = appState;
   rtm.on('message', async message => {
     const {
+      bot_id: botId,
       channel,
-      text
+      text,
+      type,
+      user
     } = message;
 
     const isNotBotUser = Boolean(message.subtype !== 'bot_message');
@@ -36,9 +39,12 @@ module.exports = ({
     }
 
     tracker.track('New interaction detected.', {
+      botId,
       channel,
       listener: 'QUERY_CHANNEL_LUNCH',
-      text
+      text,
+      type,
+      user
     });
 
     const result = await action({ appState, message });
