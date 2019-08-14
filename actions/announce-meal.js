@@ -3,7 +3,7 @@ const buildSlackResponse = require('../utils/build-slack-response');
 const isToday = require('../utils/is-today');
 const logger = require('../logger');
 
-let todaysLunch = {};
+const todaysLunch = {};
 
 const announceMeal = async ({
   appState: {
@@ -14,20 +14,27 @@ const announceMeal = async ({
   },
   message: { channel: channelId }
 }) => {
-  logger.debug('Action ANNOUNCE_MEAL called.');
+  logger.debug(`Action ANNOUNCE_MEAL called in channel ${channelId}. Current todays lunch is`, todaysLunch);
 
   const { ZEROCATER_MEALS_URL: mealURLTemplate } = endpoints;
   const { name: channelName } = subscribedChannels[channelId];
   const { companyId } = sites[channelName];
 
-  if (!todaysLunch.meal || (!todaysLunch.timestamp && !isToday(todaysLunch.timestamp))) {
-    logger.debug('Meal data missing or stale. Fetching new meal data.');
+  Object.keys(subscribedChannels).forEach(channel => {
+    if (!todaysLunch[channel]) {
+      todaysLunch[channel] = {};
+    }
+  });
+
+  if (!todaysLunch[channelId].meal || !todaysLunch[channelId].timestamp || !isToday(todaysLunch[channelId].timestamp)) {
+    logger.debug('Meal data missing or stale. Fetching new meal data. Previous state logged.', {
+      todaysLunch
+    });
 
     let meal;
 
     try {
       meal = await today(companyId);
-      logger.debug('Fetched and found meal for today.', meal);
     } catch (error) {
       logger.debug('Failed to find a meal for today.', {
         error
@@ -35,6 +42,11 @@ const announceMeal = async ({
     }
 
     if (!meal) {
+      web.chat.postMessage({
+        as_user: true,
+        channel: channelId,
+        text: 'Sorry, I couldn\'t find a meal for today.'
+      });
       return {
         action: 'ANNOUNCE_MEAL',
         result: 'failure',
@@ -43,7 +55,7 @@ const announceMeal = async ({
     }
 
     const timestamp = new Date();
-    todaysLunch = meal && {
+    todaysLunch[channelId] = {
       meal,
       timestamp
     };
@@ -55,7 +67,7 @@ const announceMeal = async ({
     vendor_description: vendorDescription,
     vendor_image_url: vendorImageURL,
     vendor_name: vendorName
-  } = todaysLunch.meal;
+  } = todaysLunch[channelId].meal;
 
   const mealURL = mealURLTemplate.replace('{companyId}', companyId);
   const mealsHyperlinkURL = `${mealURL}/${id}`;

@@ -18,6 +18,7 @@ module.exports = ({
     const isTrue = result => result === true;
     const isInteraction = [
       /!lunch/ig.test(text),
+      /lunch is here/ig.test(text),
       /what.{1}s for lunch/ig.test(text),
       /what is for lunch/ig.test(text),
       /what is today.{1}s lunch/ig.test(text),

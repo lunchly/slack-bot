@@ -53,7 +53,7 @@ To run Lunchly, ensure the configuration steps above are completed, and do the f
 
 Lunchly listens for interactions in all channels it is a member of. If a meal is found for that day then the bot will post a message containing details about the meal.
 
-Triggers*: `!lunch`, `what's for lunch`, `what is for lunch`, `what is today's lunch`, `what's for lunch`
+Triggers*: `!lunch`, `lunch is here`, `what's for lunch`, `what is for lunch`, `what is today's lunch`, `what's for lunch`
 
 _Apostrophe optional. Case insensitive._
 
