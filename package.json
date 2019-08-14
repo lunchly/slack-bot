@@ -1,11 +1,15 @@
 {
   "name": "@lunchly/slack-bot",
-  "version": "0.3.0",
-  "description": "A Slack bot that announces meals for your company.",
+  "version": "0.4.0",
+  "description": "A Slack bot that posts catered meal announcements.",
   "keywords": [
     "bots",
     "chatbots",
-    "slack"
+    "slack",
+    "zerocater",
+    "lunch",
+    "meal",
+    "announcements"
   ],
   "author": {
     "name": "Chris Vogt",
