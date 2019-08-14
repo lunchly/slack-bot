@@ -30,9 +30,11 @@ const getAppState = () => {
 };
 
 const mockValidMessage = {
+  bot_id: 'A0005',
   channel: channelFixture.id,
   subtype: 'derp',
   text: '!lunch',
+  type: 'message',
   user: '10001'
 };
 
@@ -89,9 +91,12 @@ test.serial('it fires a tracking event for valid interaction messages', async t 
     [
       'New interaction detected.',
       {
+        botId: mockValidMessage.bot_id,
         channel: mockValidMessage.channel,
         listener: 'QUERY_CHANNEL_LUNCH',
-        text: mockValidMessage.text
+        text: mockValidMessage.text,
+        type: mockValidMessage.type,
+        user: mockValidMessage.user
       }
     ]
   ]);
