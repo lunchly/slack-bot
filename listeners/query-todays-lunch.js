@@ -1,36 +1,37 @@
 const logger = require('../logger');
 const tracker = require('../tracker');
 
+const isNotBotMessage = require('../validators/is-not-bot-message');
+const isNotOwnMessage = require('../validators/is-not-own-message');
+const isTrue = require('../validators/is-true');
+
 module.exports = ({
   action,
   appState
 }) => {
   const { clients: { rtm } } = appState;
+  const { activeUserId } = rtm;
+
   rtm.on('message', async message => {
     const {
-      bot_id: botId,
       channel,
       text,
-      type,
-      user
+      type: messageType,
+      user: messageUser
     } = message;
 
-    const isNotBotUser = Boolean(message.subtype !== 'bot_message');
-    const isNotOwnMessage = message.user !== rtm.activeUserId;
-
-    const isTrue = result => result === true;
     const isInteraction = [
       /!lunch/ig.test(text),
       /lunch is here/ig.test(text),
-      /what.{1}s for lunch/ig.test(text),
       /what is for lunch/ig.test(text),
       /what is today.{1}s lunch/ig.test(text),
+      /what.{1}s for lunch/ig.test(text),
       /what.{1}s for lunch/ig.test(text)
     ].some(isTrue);
 
     const shouldRespond = [
-      isNotBotUser,
-      isNotOwnMessage,
+      isNotBotMessage(message),
+      isNotOwnMessage(message, activeUserId),
       isInteraction
     ].every(isTrue);
 
@@ -39,12 +40,12 @@ module.exports = ({
     }
 
     tracker.track('New interaction detected.', {
-      botId,
+      activeUserId,
       channel,
       listener: 'QUERY_CHANNEL_LUNCH',
-      text,
-      type,
-      user
+      messageType,
+      messageUser,
+      text
     });
 
     const result = await action({ appState, message });
