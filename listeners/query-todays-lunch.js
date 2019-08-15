@@ -1,8 +1,8 @@
 const logger = require('../logger');
 const tracker = require('../tracker');
 
-const isNotBotMessage = require('../validators/is-not-bot-message');
-const isNotOwnMessage = require('../validators/is-not-own-message');
+const isBotMessage = require('../validators/is-bot-message');
+const isOwnMessage = require('../validators/is-own-message');
 const isTrue = require('../validators/is-true');
 
 module.exports = ({
@@ -30,8 +30,8 @@ module.exports = ({
     ].some(isTrue);
 
     const shouldRespond = [
-      isNotBotMessage(message),
-      isNotOwnMessage(message, activeUserId),
+      !isBotMessage(message),
+      !isOwnMessage(message, activeUserId),
       isInteraction
     ].every(isTrue);
 

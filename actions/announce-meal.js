@@ -1,6 +1,6 @@
 const { today } = require('@lunchly/service-zerocater');
 const buildSlackResponse = require('../utils/build-slack-response');
-const isToday = require('../utils/is-today');
+const isToday = require('../validators/is-today');
 const logger = require('../logger');
 
 const todaysLunch = {};
