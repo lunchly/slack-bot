@@ -1,31 +1,34 @@
 const logger = require('../logger');
 const tracker = require('../tracker');
 
+const isBotMessage = require('../validators/is-bot-message');
+const isOwnMessage = require('../validators/is-own-message');
+const isTrue = require('../validators/is-true');
+
 module.exports = ({
   action,
   appState
 }) => {
   const { clients: { rtm } } = appState;
+  const { activeUserId } = rtm;
+
   rtm.on('message', async message => {
     const {
       channel,
-      text
+      text,
+      user: messageUser,
+      type: messageType
     } = message;
 
-    const isNotBotUser = Boolean(message.subtype !== 'bot_message');
-    const isNotOwnMessage = message.user !== rtm.activeUserId;
-
-    const isTrue = result => result === true;
     const isInteraction = [
-      /!lunchly/ig.test(text),
+      /how does lunchly/ig.test(text),
       /what is lunchly/ig.test(text),
-      /who is lunchly/ig.test(text),
-      /how does lunchly/ig.test(text)
+      /who is lunchly/ig.test(text)
     ].some(isTrue);
 
     const shouldRespond = [
-      isNotBotUser,
-      isNotOwnMessage,
+      !isBotMessage(message),
+      !isOwnMessage(message, activeUserId),
       isInteraction
     ].every(isTrue);
 
@@ -34,8 +37,11 @@ module.exports = ({
     }
 
     tracker.track('New interaction detected.', {
+      activeUserId,
       channel,
       listener: 'QUERY_ABOUT',
+      messageType,
+      messageUser,
       text
     });
 

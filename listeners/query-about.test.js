@@ -15,7 +15,7 @@ const mockSubscribedChannels = { CD93G4JMP: channelFixture };
 
 const queryTodaysLunch = proxyquire
   .noCallThru()
-  .load('./query-todays-lunch', {
+  .load('./query-about', {
     '../logger': stubLogger,
     '../tracker': stubTracker
   });
@@ -32,7 +32,7 @@ const getAppState = () => {
 const mockValidMessage = {
   channel: channelFixture.id,
   subtype: 'derp',
-  text: '!lunch',
+  text: 'what is lunchly',
   type: 'message',
   user: '10001'
 };
@@ -92,7 +92,7 @@ test.serial('it fires a tracking event for valid interaction messages', async t 
       {
         activeUserId: mockRTMClient.activeUserId,
         channel: mockValidMessage.channel,
-        listener: 'QUERY_CHANNEL_LUNCH',
+        listener: 'QUERY_ABOUT',
         messageType: mockValidMessage.type,
         messageUser: mockValidMessage.user,
         text: mockValidMessage.text

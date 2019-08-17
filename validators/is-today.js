@@ -1,4 +1,4 @@
-const setDateToMidnight = require('./set-date-to-midnight');
+const setDateToMidnight = require('../utils/set-date-to-midnight');
 
 /**
  * Validate that a date object is set to today.

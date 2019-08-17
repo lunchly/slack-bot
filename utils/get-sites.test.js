@@ -1,7 +1,7 @@
 import test from 'ava';
 import proxyquire from 'proxyquire';
 
-import channelFixture from '../_fixtures/channel.fixture';
+import sfChannelFixture from '../_fixtures/channel-sf';
 
 const sitesFixture = [ {
   channel: 'phoenix',
@@ -18,7 +18,7 @@ const getSites = proxyquire
   });
 
 const mockSites = [
-  channelFixture
+  sfChannelFixture
 ];
 
 test('TODO: add unit tests', t => {

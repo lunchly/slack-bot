@@ -2,7 +2,7 @@ import proxyquire from 'proxyquire';
 import sinon from 'sinon';
 import test from 'ava';
 
-import channelFixture from './_fixtures/channel.fixture';
+import channelFixture from './_fixtures/channel-sf';
 
 const mockSites = [ { channel: 'sf', zeroCaterID: 'abc123' } ];
 const mockSubscribedChannels = [ channelFixture ];
