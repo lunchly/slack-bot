@@ -2,7 +2,7 @@ import proxyquire from 'proxyquire';
 import { createSandbox } from 'sinon';
 import test from 'ava';
 
-import channelFixture from '../_fixtures/channel.fixture';
+import channelFixture from '../_fixtures/channel-sf';
 
 const sandbox = createSandbox();
 const mockResult = { result: 'success' };

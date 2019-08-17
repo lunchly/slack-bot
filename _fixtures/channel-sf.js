@@ -25,6 +25,7 @@ const channelFixture = {
     creator: '',
     last_set: 0
   },
+  type: 'public_channel',
   purpose: {
     value: '',
     creator: '',

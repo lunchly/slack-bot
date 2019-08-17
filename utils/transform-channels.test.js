@@ -1,11 +1,12 @@
 import test from 'ava';
 
-import channelFixture from '../_fixtures/channel.fixture';
+import breakroomChannelFixture from '../_fixtures/channel-breakroom';
+import sfChannelFixture from '../_fixtures/channel-sf';
 import transformChannels from './transform-channels';
 
 test('it converts all object keys to camelCase', t => {
-  const transfomedChannels = transformChannels({}, channelFixture);
-  t.deepEqual(Object.keys(transfomedChannels[channelFixture.id]), [
+  const transfomedChannels = transformChannels({}, sfChannelFixture);
+  t.deepEqual(Object.keys(transfomedChannels[sfChannelFixture.id]), [
     'id',
     'isArchived',
     'isChannel',
@@ -18,24 +19,13 @@ test('it converts all object keys to camelCase', t => {
 });
 
 test('reduces multiple channels to a single dictionary', t => {
-  const breakroomChannel = {
-    id: 'TWEI7XP8B',
-    is_archived: false,
-    is_channel: true,
-    is_member: true,
-    is_mpim: false,
-    is_private: false,
-    name: 'breakroom',
-    name_normalized: 'The Breakroom'
-  };
-
   const channels = [
-    channelFixture,
-    breakroomChannel
+    breakroomChannelFixture,
+    sfChannelFixture
   ].reduce(transformChannels, {});
 
   t.deepEqual(channels, {
-    [breakroomChannel.id]: transformChannels({}, breakroomChannel)[breakroomChannel.id],
-    [channelFixture.id]: transformChannels({}, channelFixture)[channelFixture.id]
+    [breakroomChannelFixture.id]: transformChannels({}, breakroomChannelFixture)[breakroomChannelFixture.id],
+    [sfChannelFixture.id]: transformChannels({}, sfChannelFixture)[sfChannelFixture.id]
   });
 });
