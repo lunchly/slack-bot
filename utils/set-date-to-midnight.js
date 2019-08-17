@@ -4,7 +4,7 @@
  * @returns {Date} The updated Date object.
  */
 const setDateToMidnight = date => {
-  date.setHours(0, 0, 0, 0);
+  return date.setHours(0, 0, 0, 0);
 };
 
 module.exports = setDateToMidnight;
