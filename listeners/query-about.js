@@ -46,6 +46,8 @@ module.exports = appState => {
     });
 
     listener.emit('interaction', { message });
+
+    logger.debug('QUERY_ABOUT listener detected a new interaction.');
   });
 
   return listener;

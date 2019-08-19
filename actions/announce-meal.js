@@ -19,8 +19,7 @@ const announceMeal = appState => async interaction => {
   logger.debug('Running action.', {
     action: 'ANNOUNCE_MEAL',
     channel,
-    companyId,
-    meal
+    companyId
   });
 
   const mealURL = mealURLTemplate.replace('{companyId}', companyId);
