@@ -2,15 +2,22 @@ const logger = require('../logger');
 
 const { version } = require('../package.json');
 
-const describeSelf = async ({
-  appState: { clients: { web } },
-  message: { channel: channelId }
-}) => {
-  logger.debug('Action DESCRIBE_SELF called.');
+const describeSelf = appState => async interaction => {
+  const { message: { channel } } = interaction;
+  const { clients: { web } } = appState;
 
-  const response = {
+  if (!channel || !web) {
+    return;
+  }
+
+  logger.debug('Running action.', {
+    action: 'DESCRIBE_SELF',
+    channel
+  });
+
+  const result = await web.chat.postMessage({
     as_user: true,
-    channel: channelId,
+    channel,
     blocks: [
       {
         type: 'section',
@@ -41,9 +48,8 @@ Hi, I'm Lunchly v${version}. I'm a bot that announces catered meals in Slack. Le
         ]
       }
     ]
-  };
+  });
 
-  const result = await web.chat.postMessage(response);
   return result;
 };
 

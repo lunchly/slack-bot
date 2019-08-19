@@ -1,3 +1,4 @@
+const EventEmitter = require('events');
 const logger = require('../logger');
 const tracker = require('../tracker');
 
@@ -5,12 +6,11 @@ const isBotMessage = require('../validators/is-bot-message');
 const isOwnMessage = require('../validators/is-own-message');
 const isTrue = require('../validators/is-true');
 
-module.exports = ({
-  action,
-  appState
-}) => {
+module.exports = appState => {
   const { clients: { rtm } } = appState;
   const { activeUserId } = rtm;
+
+  const listener = new EventEmitter();
 
   rtm.on('message', async message => {
     const {
@@ -48,7 +48,8 @@ module.exports = ({
       text
     });
 
-    const result = await action({ appState, message });
-    logger.debug('QUERY_CHANNEL_LUNCH completed an action.', result);
+    listener.emit('interaction', { message });
   });
+
+  return listener;
 };
