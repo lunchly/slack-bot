@@ -1,5 +1,5 @@
 const buildSlackResponse = ({
-  channelId,
+  channel,
   mealURL,
   mealsHyperlinkURL,
   text,
@@ -8,7 +8,7 @@ const buildSlackResponse = ({
 }) => {
   return {
     as_user: true,
-    channel: channelId,
+    channel,
     blocks: [
       {
         type: 'section',

@@ -41,12 +41,12 @@ To run Lunchly, ensure the configuration steps above are completed, and do the f
 
 ###### Development
 
-```SLACK_BOT_API_TOKEN=xoxb-0000-your-token npm run dev```
+```SLACK_BOT_API_TOKEN=xoxb-0000-your-token MIXPANEL_TOKEN=000 LOG_LEVEL=debug npm run dev```
 
 
 ###### Production
 
-```SLACK_BOT_API_TOKEN=xoxb-0000-your-token npm run start```
+```SLACK_BOT_API_TOKEN=xoxb-0000-your-token MIXPANEL_TOKEN=000 npm run start```
 
 
 ### Use
